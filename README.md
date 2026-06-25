@@ -7,7 +7,7 @@ Deploy any branch to [PreviewDrop](https://previewdrop.dev) and get a live HTTPS
 ```yaml
 - name: Deploy preview
   id: preview
-  uses: global-software-development-eu/kognite-deploy-action@v1
+  uses: global-software-development-eu/previewdrop-deploy-action@v1
   with:
     api-key: ${{ secrets.PREVIEWDROP_API_KEY }}
 ```
@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Deploy preview
         id: preview
-        uses: global-software-development-eu/kognite-deploy-action@v1
+        uses: global-software-development-eu/previewdrop-deploy-action@v1
         with:
           api-key: ${{ secrets.PREVIEWDROP_API_KEY }}
 
