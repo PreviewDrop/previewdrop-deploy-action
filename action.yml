@@ -1,0 +1,51 @@
+name: PreviewDrop Deploy
+description: Deploy a preview environment to PreviewDrop and get a live HTTPS URL in your CI pipeline.
+author: PreviewDrop
+
+branding:
+  icon: upload-cloud
+  color: orange
+
+inputs:
+  api-key:
+    description: >
+      PreviewDrop API key (pd_live_* — create one in Dashboard → Settings → API Keys).
+      Store it as a repository secret: secrets.PREVIEWDROP_API_KEY
+    required: true
+
+  project:
+    description: >
+      Project name or ID to deploy. Must already exist in your PreviewDrop workspace.
+      If omitted, PreviewDrop uses the first project linked to this repository.
+    required: false
+
+  branch:
+    description: >
+      Branch to deploy. Defaults to the branch that triggered the workflow
+      (github.head_ref for pull_request events, github.ref_name otherwise).
+    required: false
+    default: ''
+
+  wait:
+    description: Wait for the deployment to reach "ready" status before completing the step.
+    required: false
+    default: 'true'
+
+  timeout-seconds:
+    description: Maximum seconds to wait for the deployment to become ready (only when wait=true).
+    required: false
+    default: '300'
+
+outputs:
+  url:
+    description: Live HTTPS preview URL once the deployment is ready.
+
+  deployment-id:
+    description: PreviewDrop deployment ID — useful for subsequent steps (e.g. running E2E tests).
+
+  status:
+    description: Final deployment status (ready, failed, timeout).
+
+runs:
+  using: node20
+  main: dist/index.js

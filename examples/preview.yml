@@ -1,0 +1,31 @@
+name: Preview Deploy
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write   # needed to post the URL as a PR comment
+
+    steps:
+      - name: Deploy preview
+        id: preview
+        uses: global-software-development-eu/kognite-deploy-action@v1
+        with:
+          api-key: ${{ secrets.PREVIEWDROP_API_KEY }}
+          # project: my-project   # optional — omit if the repo has exactly one project
+
+      - name: Comment preview URL on PR
+        if: steps.preview.outputs.status == 'ready'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `### Preview ready\n\n**URL:** ${{ steps.preview.outputs.url }}\n\nDeployment ID: \`${{ steps.preview.outputs.deployment-id }}\``
+            })
